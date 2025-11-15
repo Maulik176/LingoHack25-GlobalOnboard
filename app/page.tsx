@@ -54,6 +54,12 @@ type TranslationOverride = {
 type OverridesState = Partial<Record<Locale, Record<string, TranslationOverride>>>;
 
 const storageKey = "globalonboard_overrides_v1";
+const LOCALE_BADGE_LABELS: Record<Locale, string> = {
+  en: "English (en)",
+  es: "Spanish (es)",
+  fr: "French (fr)",
+  hi: "Hindi (hi)",
+};
 type TaskSource = "template" | "custom";
 type HrTask = Task & { source: TaskSource };
 type CustomTranslationCache = Partial<
@@ -409,6 +415,7 @@ export default function Home() {
   const statusBadgeClass = (status: TranslationStatus) =>
     `inline-flex items-center rounded-full border border-white/10 px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]} dark:border-slate-700`;
   const hasTranslationsInFlight = translationCount > 0;
+  const readableLocaleName = LOCALE_BADGE_LABELS[selectedLocale] ?? selectedLocale;
 
   const handleTaskChange = (index: number, field: "title" | "description", value: string) => {
     const currentTask = tasks[index];
@@ -568,10 +575,20 @@ export default function Home() {
 
         <section className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-[32px] bg-gradient-to-br from-white/90 to-white/60 p-6 shadow-xl ring-1 ring-slate-200/70 transition backdrop-blur-sm dark:from-slate-900 dark:to-slate-900/70 dark:ring-slate-800/80">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                {hrStrings["hr.panel_title"]}
-              </h2>
+            <div className="mb-6 space-y-3">
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
+                    HR Workspace
+                  </h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Configure the onboarding journey for this role.
+                  </p>
+                </div>
+                <span className="inline-flex items-center rounded-full bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-200">
+                  👤 HR / People Ops
+                </span>
+              </div>
               <div className="text-right text-xs text-slate-500 dark:text-slate-400">
                 <p>{hrStrings["field.base_language"]}</p>
                 <p className="font-semibold text-slate-900 dark:text-white">
@@ -583,7 +600,7 @@ export default function Home() {
             <div className="space-y-6">
               <div>
                 <label className="text-xs font-semibold uppercase text-slate-500 dark:text-slate-300">
-                  {hrStrings["field.company_name"]}
+                  Your company name
                 </label>
                 <input
                   className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-white dark:focus:ring-white/20"
@@ -594,7 +611,7 @@ export default function Home() {
 
               <div>
                 <label className="text-xs font-semibold uppercase text-slate-500 dark:text-slate-300">
-                  {hrStrings["field.role"]}
+                  Role this onboarding is for
                 </label>
                 <input
                   className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-white dark:focus:ring-white/20"
@@ -606,12 +623,15 @@ export default function Home() {
               <div>
                 <div className="flex items-baseline justify-between">
                   <label className="text-xs font-semibold uppercase text-slate-500 dark:text-slate-300">
-                    {hrStrings["section.checklist"]}
+                    Onboarding checklist
                   </label>
                   <p className="text-xs text-slate-400 dark:text-slate-500">
                     {hrStrings["section.template"]}
                   </p>
                 </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  These are the steps your new hire will see. Add, edit, or remove items to fit this role.
+                </p>
 
                 <div className="mt-3 space-y-4">
                   {tasks.map((task, index) => (
@@ -651,16 +671,16 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={handleAddTask}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-500 hover:text-slate-900 dark:border-slate-600 dark:text-slate-200 dark:hover:border-slate-400"
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-500 dark:border-slate-600 dark:text-slate-200 dark:hover:border-slate-400"
                 >
                   <span className="text-lg">+</span>
-                  Add checklist item
+                  Add onboarding step
                 </button>
               </div>
 
               <div>
                 <label className="text-xs font-semibold uppercase text-slate-500 dark:text-slate-300">
-                  {hrStrings["section.welcome_note"]}
+                  Your welcome note to the new hire
                 </label>
                 <textarea
                   className="mt-2 h-28 w-full resize-none rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-white dark:focus:ring-white/20"
@@ -668,6 +688,9 @@ export default function Home() {
                   value={welcomeNote}
                   onChange={(event) => setWelcomeNote(event.target.value)}
                 />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Write this once in English — we’ll translate it for each employee.
+                </p>
               </div>
             </div>
           </div>
@@ -677,38 +700,44 @@ export default function Home() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold tracking-wide text-slate-300">
-                    {previewStrings["employee.panel_title"]}
+                    Employee Experience
                   </p>
                   <p className="text-lg font-medium text-slate-900 dark:text-white">
-                    {previewStrings["app.title"]}
+                    This is what your new hire will see.
                   </p>
                 </div>
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+                  🧑‍💼 New hire – {readableLocaleName}
+                </span>
+              </div>
 
-                <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-slate-500 dark:text-slate-500">
-                  <span>{hrStrings["field.language"]}</span>
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <select
-                      value={selectedLocale}
-                      onChange={(event) => {
-                        setSelectedLocale(event.target.value as Locale);
-                      }}
-                      className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:border-slate-900 focus:outline-none dark:border-white/20 dark:bg-slate-800/60 dark:text-white"
-                    >
-                      {SUPPORTED_LOCALES.map((locale) => (
-                        <option key={locale} value={locale} className="text-slate-900">
-                          {getLocaleLabel(locale)}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={handleDownloadPack}
-                      className="rounded-2xl border border-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 transition hover:border-slate-900 hover:bg-slate-50 dark:border-white/20 dark:text-white dark:hover:bg-slate-800"
-                    >
-                      Download onboarding pack
-                    </button>
-                  </div>
+              <div className="flex flex-col gap-2 text-xs font-semibold uppercase text-slate-500 dark:text-slate-500">
+                <span>{hrStrings["field.language"]}</span>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <select
+                    value={selectedLocale}
+                    onChange={(event) => {
+                      setSelectedLocale(event.target.value as Locale);
+                    }}
+                    className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:border-slate-900 focus:outline-none dark:border-white/20 dark:bg-slate-800/60 dark:text-white"
+                  >
+                    {SUPPORTED_LOCALES.map((locale) => (
+                      <option key={locale} value={locale} className="text-slate-900">
+                        {getLocaleLabel(locale)}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={handleDownloadPack}
+                    className="rounded-2xl border border-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 transition hover:border-slate-900 hover:bg-slate-50 dark:border-white/20 dark:text-white dark:hover:bg-slate-800 sm:ml-auto"
+                  >
+                    Download Onboarding Pack
+                  </button>
                 </div>
+                <p className="text-xs text-muted-foreground self-end text-right sm:text-right">
+                  Use this document in your HRIS, email, or onboarding portal.
+                </p>
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -725,7 +754,7 @@ export default function Home() {
                           : "text-slate-200 dark:text-slate-400"
                       }`}
                     >
-                      Single preview
+                      Employee view
                     </button>
                     <button
                       type="button"
@@ -736,10 +765,19 @@ export default function Home() {
                           : "text-slate-200 dark:text-slate-400"
                       }`}
                     >
-                    QA view
+                    Translation QA
                   </button>
                 </div>
               </div>
+              {viewMode === "single" ? (
+                <p className="text-xs text-muted-foreground">
+                  You’re seeing the onboarding exactly like the employee.
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  You’re reviewing English vs translated copy side-by-side.
+                </p>
+              )}
             </div>
 
             {isQaMode ? (
@@ -1038,6 +1076,9 @@ export default function Home() {
               </div>
             ) : (
               <div className="mt-6 space-y-6">
+                <p className="text-xs text-muted-foreground">
+                  Viewing as a new hire in {readableLocaleName}.
+                </p>
                 <div>
                   <p className="text-sm uppercase tracking-wide text-slate-400">
                     {previewStrings["field.company_name"]}
@@ -1068,7 +1109,10 @@ export default function Home() {
 
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-                    {previewStrings["section.checklist"]}
+                    Your onboarding steps
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Here’s what your first days with the company will look like.
                   </p>
                   <ol className="mt-3 space-y-3">
                     {effectiveTemplate.tasks.map((task) => (
