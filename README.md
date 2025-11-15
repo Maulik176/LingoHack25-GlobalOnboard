@@ -3,13 +3,14 @@
 GlobalOnboard is a hackathon MVP for LingoHack25 that helps HR teams create one English onboarding checklist and instantly preview how it looks for employees in Spanish, French, or Hindi. It combines the full Lingo.dev toolchain—CLI for static JSON, JavaScript SDK for runtime text, and CI automation—to showcase a practical multilingual workflow.
 
 ## Features
-- **HR setup panel** – Edit the English source of company details, role, onboarding tasks, and a personal welcome message.
-- **Employee preview** – Switch between `en`, `es`, `fr`, and `hi` to see localized UI labels and task templates produced by the Lingo CLI.
-- **Preview modes** – Toggle between the single-preview view or a QA mode that shows English vs. target locale side by side with localization health warnings for long translations.
-- **Runtime welcome note translation** – The welcome message is translated on demand through the Lingo JavaScript SDK so personalized edits are reflected immediately.
-- **Export onboarding packs** – Download the currently displayed locale as a JSON file (company, role, tasks, welcome note) to plug into HR systems.
+- **HR setup panel** – Edit the English source of company details, role, onboarding tasks, and a personal welcome message. Add or delete checklist items on the fly; new tasks stay in session state with unique IDs.
+- **Employee preview** – Switch between `en`, `es`, `fr`, and `hi` to see localized UI labels and tasks. Custom tasks are translated with the Lingo JS SDK and cached, so every locale reflects the latest content.
+- **Preview modes** – Toggle between the single-preview view or a QA mode that shows English vs. target locale side by side with localization health warnings for long translations. Overrides (Machine → Edited → Approved) apply to both template and custom tasks.
+- **Translation feedback** – A spinner overlay appears on the Employee Preview whenever runtime translations (welcome note or custom tasks) are in progress, so HR knows content is still updating.
+- **Runtime welcome note & task translation** – The welcome note and any user-added tasks stream through the Lingo JavaScript SDK so personalized edits are reflected immediately across locales.
+- **Export onboarding packs** – Download the currently displayed locale as a `.doc` onboarding pack (company, role, tasks, welcome note) ready to hand off to new hires or HRIS workflows.
 - **Lingo CLI + CI** – `i18n.json` config plus a GitHub Actions workflow keep `data/*.json` translations up to date whenever English source files change.
-- **Tailwind-powered layout** – Single-page responsive layout built with the Next.js App Router and Tailwind CSS.
+- **Tailwind-powered layout** – Single-page responsive layout with a gradient dark theme built with the Next.js App Router and Tailwind CSS.
 
 ## Tech Stack
 - Next.js 16 (App Router, TypeScript)
