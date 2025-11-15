@@ -142,11 +142,10 @@ i18n.json           # Bucket + locale configuration
 ## ✅ Hackathon Compliance & Notes
 
 - All code, UI, and assets created fresh during **LingoHack25**.
-- No backend dependencies — pure Next.js frontend, perfect for Netlify/Vercel deployment.
 - API keys are required only for translation features; none are checked into the repo.
 - Want more locales? Add them to `SUPPORTED_LOCALES` + `i18n.json`, re-run the CLI, and you’re done.
 
 ---
 
 ### 💬 Questions for Judges?
-Open an issue or ping the team — we’d love to show how GlobalOnboard can become the multilingual onboarding cockpit for any global company.
+Open an issue or ping me — I'd love to show how GlobalOnboard can become the multilingual onboarding cockpit for any global company.
