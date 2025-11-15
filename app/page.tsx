@@ -632,7 +632,7 @@ export default function Home() {
             </ul>
           </header>
 
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section className="grid gap-6 lg:grid-cols-2 items-start">
           <div className="rounded-4xl bg-linear-to-br from-white/90 to-white/60 p-6 shadow-xl ring-1 ring-slate-200/70 transition backdrop-blur-sm dark:from-slate-900 dark:to-slate-900/70 dark:ring-slate-800/80">
             <div className="mb-6 space-y-3">
               <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
