@@ -1,11 +1,10 @@
-# GlobalOnboard · LingoHack25 Finalist Playground ✨
+# GlobalOnboard · LingoHack25 ✨
 
 > **One onboarding checklist. Any language.**  
 > HR writes once in English, and GlobalOnboard turns it into a polished, localized employee experience by combining **Lingo CLI**, **Lingo JavaScript SDK**, and **Lingo CI**.
 
-![Hero preview](public/globalonboardlogo.jpg)
 
-## 🧠 Why Judges Love It
+## 🧠 The MAIN Pillars of GlobalOnboard
 
 - **Real personas:** HR Workspace (authoring) + Employee Experience (preview) wired together in real time.
 - **Full Lingo toolchain:** Static JSON via CLI, runtime personalization via SDK, and CI automation so translations stay fresh.
