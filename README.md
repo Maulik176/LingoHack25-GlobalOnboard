@@ -1,79 +1,153 @@
-# GlobalOnboard
+# GlobalOnboard · LingoHack25 Finalist Playground ✨
 
-GlobalOnboard is a hackathon MVP for LingoHack25 that helps HR teams create one English onboarding checklist and instantly preview how it looks for employees in Spanish, French, or Hindi. It combines the full Lingo.dev toolchain—CLI for static JSON, JavaScript SDK for runtime text, and CI automation—to showcase a practical multilingual workflow.
+> **One onboarding checklist. Any language.**  
+> HR writes once in English, and GlobalOnboard turns it into a polished, localized employee experience by combining **Lingo CLI**, **Lingo JavaScript SDK**, and **Lingo CI**.
 
-## Features
-- **HR setup panel** – Edit the English source of company details, role, onboarding tasks, and a personal welcome message. Add or delete checklist items on the fly; new tasks stay in session state with unique IDs.
-- **Employee preview** – Switch between `en`, `es`, `fr`, and `hi` to see localized UI labels and tasks. Custom tasks are translated with the Lingo JS SDK and cached, so every locale reflects the latest content.
-- **Preview modes** – Toggle between the single-preview view or a QA mode that shows English vs. target locale side by side with localization health warnings for long translations. Overrides (Machine → Edited → Approved) apply to both template and custom tasks.
-- **Translation feedback** – A spinner overlay appears on the Employee Preview whenever runtime translations (welcome note or custom tasks) are in progress, so HR knows content is still updating.
-- **Runtime welcome note & task translation** – The welcome note and any user-added tasks stream through the Lingo JavaScript SDK so personalized edits are reflected immediately across locales.
-- **Export onboarding packs** – Download the currently displayed locale as a `.doc` onboarding pack (company, role, tasks, welcome note) ready to hand off to new hires or HRIS workflows.
-- **Lingo CLI + CI** – `i18n.json` config plus a GitHub Actions workflow keep `data/*.json` translations up to date whenever English source files change.
-- **Tailwind-powered layout** – Single-page responsive layout with a gradient dark theme built with the Next.js App Router and Tailwind CSS.
+![Hero preview](public/globalonboardlogo.jpg)
 
-## Tech Stack
-- Next.js 16 (App Router, TypeScript)
-- Tailwind CSS 4
-- Lingo CLI + Lingo JavaScript SDK
-- GitHub Actions for automation
+## 🧠 Why Judges Love It
 
-## Getting Started
+- **Real personas:** HR Workspace (authoring) + Employee Experience (preview) wired together in real time.
+- **Full Lingo toolchain:** Static JSON via CLI, runtime personalization via SDK, and CI automation so translations stay fresh.
+- **Enterprise-ready touches:** Translation QA mode, localization health warnings, onboarding pack export, and translation spinners that prove we’re production aware.
+
+---
+
+## 🔑 Feature Highlights
+
+| Area | What it unlocks | Lingo capability |
+| --- | --- | --- |
+| HR Workspace | Edit company, role, welcome note, and a fully dynamic checklist (add/delete/modify tasks). | Authoring surface for English source |
+| Employee Experience | Switch between `en`, `es`, `fr`, `hi` previews with live updates + translation loading overlay. | CLI JSON + SDK runtime translations |
+| Preview Modes | `Employee view` or `Translation QA` (side-by-side EN vs target locale) with Machine → Edited → Approved overrides. | Human-in-the-loop QA |
+| Localization Health | Warns when translated copy is >1.5× English length, per task + summary. | QA signal |
+| Onboarding Pack Export | One click generates a `.doc` bundle for the current locale (company, role, tasks, welcome note). | HR enablement |
+| Lingo CI Workflow | GitHub Action auto-runs `lingo.dev ci` whenever English JSON changes. | Translation automation |
+
+---
+
+## 🧩 Architecture At-a-Glance
+
+```
+HR inputs ──▶ English JSON templates ──▶ Lingo CLI generates data/ui.{locale}.json
+              │                               │
+              │                               └─▶ Lingo CI keeps translations up to date
+              │
+              ├─▶ React state + localStorage overrides
+              │
+              └─▶ Lingo JS SDK
+                     ├─ Welcome note runtime translation
+                     └─ Custom task translations (per locale) + caching
+```
+
+---
+
+## 🧪 Getting Started (Local Dev)
+
 ```bash
+git clone https://github.com/Maulik176/LingoHack25-GlobalOnboard.git
+cd LingoHack25-GlobalOnboard
 npm install
+
+# Provide your API key so CLI + SDK can translate
+export LINGO_DOT_DEV_API_KEY="your-key"
+# Optional alias used by some shells/CLIs
+export LINGODOTDEV_API_KEY="$LINGO_DOT_DEV_API_KEY"
+
 npm run dev
 ```
-Visit http://localhost:3000 to load the GlobalOnboard workspace. The left column represents the HR authoring experience, while the right column shows the localized employee view.
 
-## Runtime Translation Setup
-The welcome note calls `/api/translate`, which wraps the Lingo JavaScript SDK via `lib/lingo.ts`. Provide a server-side API key (reused by the CLI) before running `npm run dev`:
+Visit **http://localhost:3000** — left panel is HR Workspace, right panel is the localized Employee preview.
 
-```bash
-export LINGO_DOT_DEV_API_KEY="<your-lingo-api-key>"
-# Optional alias for the CLI name:
-export LINGODOTDEV_API_KEY="$LINGO_DOT_DEV_API_KEY"
-```
+---
 
-Without the key the preview will fall back to the English message and surface an error banner.
+## 🌐 Localization Workflow Cheat Sheet
 
-## Lingo CLI Workflow
-Static localization lives under `data/`:
+### 1. Static JSON (Lingo CLI)
+- Source files: `data/ui.en.json`, `data/onboarding_template.en.json`
+- Configure targets in `i18n.json`
+- Generate translations:
+  ```bash
+  export LINGO_DOT_DEV_API_KEY="your-key"
+  npx lingo.dev@latest run
+  ```
+- CI automation: `.github/workflows/i18n.yml` runs `npx lingo.dev@latest ci --pull-request` on every push to `main` touching English JSON or `i18n.json`.
 
-- `ui.en.json` – UI labels
-- `onboarding_template.en.json` – Company, role, and tasks
+### 2. Runtime Personalization (Lingo JS SDK)
+- Welcome note + any **custom tasks** run through `lib/lingo-client.ts`.
+- We cache translations per locale, show a loading spinner overlay, and gracefully fall back to English if the SDK errors.
 
-Configure additional targets in `i18n.json` and run the CLI after editing the English source:
+### 3. Translation QA Mode
+- Side-by-side English vs target locale.
+- Inline editing with Machine → Edited → Approved chips.
+- Reset/Unlock controls to manage overrides.
+- Length-based warnings + summary so HR spots risky strings fast.
+- Overrides feed every other view (single preview + export).
 
-```bash
-export LINGO_DOT_DEV_API_KEY="<your-lingo-api-key>"
-npx lingo.dev@latest run
-```
+---
 
-This updates `data/ui.{locale}.json` and `data/onboarding_template.{locale}.json` for all target locales. A GitHub Actions workflow (`.github/workflows/i18n.yml`) invokes `npx lingo.dev@latest ci --pull-request` on pushes to `main` that modify the English source or `i18n.json`, ensuring translations stay in sync via automated PRs.
+## 📦 Onboarding Pack Export
 
-## Project Structure
+1. Choose a locale via the Employee panel dropdown.
+2. Ensure QA overrides are final (Approved if needed).
+3. Click **Download Onboarding Pack** → generates `onboarding-pack-<locale>.doc` with:
+   - Locale code
+   - Localized company + role
+   - Welcome note (SDK translation if non-English)
+   - Full task list using effective text (overrides or machine)
+
+Perfect for HRIS uploads, emails, or sharing with managers.
+
+---
+
+## 🛠 Tech Stack
+
+- **Next.js 16** (App Router, TypeScript)
+- **Tailwind CSS 4** (custom gradient + glassmorphism theme)
+- **Lingo.dev CLI, JS SDK, CI**
+- **next-themes** + custom design tokens for dark-first UI
+- **GitHub Actions** for automated localization runs
+
+---
+
+## 📁 Project Structure
+
 ```
 app/
-  page.tsx          # HR + employee panels with locale switcher
-  layout.tsx        # Root metadata + fonts
-  globals.css       # Tailwind + design tokens
+  layout.tsx        # Root metadata + ThemeProvider
+  page.tsx          # HR + Employee panels, QA, overrides, spinner
+  globals.css       # Tailwind layers + design tokens
+components/
+  mode-toggle.tsx   # Shadcn-style theme toggle (hidden by default)
 data/
-  ui.*.json         # UI strings localized via Lingo CLI
+  ui.*.json         # Static UI translations (CLI managed)
   onboarding_template.*.json
 lib/
-  i18n.ts           # Typed helpers to load JSON per locale
-  lingo.ts          # Lingo SDK instance + runtime translation helper
+  i18n.ts           # Typed loaders for JSON bundles
+  lingo-client.ts   # SDK setup + runtime translation helpers
 .github/workflows/
-  i18n.yml          # GitHub Action running `lingo.dev ci`
-i18n.json           # Localization bucket configuration
+  i18n.yml          # CI job running `lingo.dev ci`
+i18n.json           # Bucket + locale configuration
 ```
 
-## Useful Scripts
+---
+
+## 🧾 Useful Scripts
+
 - `npm run dev` – Next.js dev server
 - `npm run build` – Production build
 - `npm run lint` – ESLint via `eslint-config-next`
 
-## Hackathon Notes
-- All styles, data, and code were authored for this LingoHack25 MVP after the event kickoff.
-- Replace placeholder API keys with your own Lingo credentials before running the CLI/SDK in production.
-- Extend `SUPPORTED_LOCALES` inside `lib/i18n.ts` and re-run the CLI to add more languages or content buckets.
+---
+
+## ✅ Hackathon Compliance & Notes
+
+- All code, UI, and assets created fresh during **LingoHack25**.
+- No backend dependencies — pure Next.js frontend, perfect for Netlify/Vercel deployment.
+- API keys are required only for translation features; none are checked into the repo.
+- Want more locales? Add them to `SUPPORTED_LOCALES` + `i18n.json`, re-run the CLI, and you’re done.
+
+---
+
+### 💬 Questions for Judges?
+Open an issue or ping the team — we’d love to show how GlobalOnboard can become the multilingual onboarding cockpit for any global company.

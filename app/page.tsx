@@ -18,6 +18,7 @@ const HERO_HIGHLIGHTS = [
   "HR writes onboarding once in English.",
   "Lingo CLI + CI auto-sync localized JSON.",
   "Lingo SDK personalizes welcome notes live.",
+  "Download polished onboarding packs per locale instantly.",
 ];
 const LENGTH_ALERT_RATIO = 1.5;
 const STATUS_LABELS: Record<TranslationStatus, string> = {
@@ -30,6 +31,59 @@ const STATUS_STYLES: Record<TranslationStatus, string> = {
   edited: "bg-blue-500/20 text-blue-100 dark:bg-blue-500/30 dark:text-blue-100",
   approved: "bg-emerald-500/20 text-emerald-100 dark:bg-emerald-500/30 dark:text-emerald-100",
 };
+const LOGO_GRADIENT_ID = "globalonboard-logo-orbit";
+
+const GlobalOnboardWordmark = () => (
+  <div className="inline-flex items-center gap-3">
+    <svg
+      className="h-14 w-14 text-emerald-400"
+      viewBox="0 0 64 64"
+      fill="none"
+      role="img"
+      aria-labelledby="globalonboard-wordmark"
+    >
+      <title id="globalonboard-wordmark">GlobalOnboard logo</title>
+      <defs>
+        <linearGradient
+          id={LOGO_GRADIENT_ID}
+          x1="10"
+          y1="54"
+          x2="54"
+          y2="10"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#0f172a" />
+          <stop offset="1" stopColor="#34d399" />
+        </linearGradient>
+      </defs>
+      <circle
+        cx="32"
+        cy="32"
+        r="16"
+        stroke={`url(#${LOGO_GRADIENT_ID})`}
+        strokeWidth="2.4"
+      />
+      <path
+        d="M12.5 35.5c9.2-2.8 21.8-2.5 30.3 0 8.5 2.5 14.5 7.2 8 11-6 3.5-17.4 4.8-26.2 2.8-8.8-2-15.2-6.8-16.1-9.6-.8-2.7 1.1-4 4-4.2Z"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="32" cy="32" r="6.5" fill="currentColor" fillOpacity="0.15" />
+      <path
+        d="M32 27c2 1.5 3.6 4.3 3.6 6.9 0 2.6-1.6 4.7-3.6 4.7s-3.6-2-3.6-4.7c0-2.6 1.6-5.4 3.6-6.9Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div className="text-3xl font-semibold leading-tight tracking-tight text-slate-900 dark:text-white md:text-4xl">
+      <span>Global</span>
+      <span className="ml-1 bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">
+        Onboard
+      </span>
+    </div>
+  </div>
+);
 
 type WelcomeCacheEntry = {
   source: string;
@@ -547,20 +601,23 @@ export default function Home() {
     <main className="min-h-screen bg-background bg-cover bg-fixed px-4 py-10 text-foreground transition-colors">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="space-y-4 rounded-4xl bg-white/80 p-6 text-center shadow-xl ring-1 ring-white/50 backdrop-blur-sm transition dark:bg-slate-900/70 dark:text-slate-100 dark:ring-white/10 md:text-left">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="space-y-3">
+                <div className="flex justify-center">
+                  <GlobalOnboardWordmark />
+                </div>
+                <p className="sr-only">{hrStrings["app.title"]}</p>
                 <p className="text-sm font-semibold uppercase tracking-wide text-indigo-500 dark:text-indigo-300">
-                  {hrStrings["app.title"]}
+                  LingoHack25 showcase
                 </p>
                 <h1 className="text-3xl font-semibold text-slate-900 dark:text-white md:text-4xl">
                   {hrStrings["app.subtitle"]}
                 </h1>
-                <p className="mt-2 text-base text-slate-600 dark:text-slate-300">
+                <p className="text-base text-slate-600 dark:text-slate-300">
                   GlobalOnboard combines Lingo CLI, SDK, and CI so HR can design one onboarding flow
                   and preview it for employees in any language.
                 </p>
               </div>
-              <div className="hidden" aria-hidden="true" />
             </div>
             <ul className="grid gap-3 text-left text-sm text-slate-700 dark:text-slate-200 sm:grid-cols-2">
               {HERO_HIGHLIGHTS.map((item) => (
