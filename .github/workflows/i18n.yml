@@ -1,0 +1,35 @@
+# Keeps localized JSON files up to date: whenever HR edits English source JSON on main,
+# this workflow runs the Lingo CLI in CI mode to open a PR with refreshed translations.
+name: Lingo CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/ui.en.json"
+      - "data/onboarding_template.en.json"
+      - "i18n.json"
+  workflow_dispatch:
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Lingo CLI in CI mode
+        env:
+          LINGO_DOT_DEV_API_KEY: ${{ secrets.LINGO_DOT_DEV_API_KEY }}
+        run: npx lingo.dev@latest ci --pull-request

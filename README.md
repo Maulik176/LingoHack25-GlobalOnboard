@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GlobalOnboard
+
+GlobalOnboard is a hackathon MVP for LingoHack25 that helps HR teams create one English onboarding checklist and instantly preview how it looks for employees in Spanish, French, or Hindi. It combines the full Lingo.dev toolchain—CLI for static JSON, JavaScript SDK for runtime text, and CI automation—to showcase a practical multilingual workflow.
+
+## Features
+- **HR setup panel** – Edit the English source of company details, role, onboarding tasks, and a personal welcome message.
+- **Employee preview** – Switch between `en`, `es`, `fr`, and `hi` to see localized UI labels and task templates produced by the Lingo CLI.
+- **Preview modes** – Toggle between the single-preview view or a QA mode that shows English vs. target locale side by side with localization health warnings for long translations.
+- **Runtime welcome note translation** – The welcome message is translated on demand through the Lingo JavaScript SDK so personalized edits are reflected immediately.
+- **Export onboarding packs** – Download the currently displayed locale as a JSON file (company, role, tasks, welcome note) to plug into HR systems.
+- **Lingo CLI + CI** – `i18n.json` config plus a GitHub Actions workflow keep `data/*.json` translations up to date whenever English source files change.
+- **Tailwind-powered layout** – Single-page responsive layout built with the Next.js App Router and Tailwind CSS.
+
+## Tech Stack
+- Next.js 16 (App Router, TypeScript)
+- Tailwind CSS 4
+- Lingo CLI + Lingo JavaScript SDK
+- GitHub Actions for automation
 
 ## Getting Started
+```bash
+npm install
+npm run dev
+```
+Visit http://localhost:3000 to load the GlobalOnboard workspace. The left column represents the HR authoring experience, while the right column shows the localized employee view.
 
-First, run the development server:
+## Runtime Translation Setup
+The welcome note calls `/api/translate`, which wraps the Lingo JavaScript SDK via `lib/lingo.ts`. Provide a server-side API key (reused by the CLI) before running `npm run dev`:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+export LINGO_DOT_DEV_API_KEY="<your-lingo-api-key>"
+# Optional alias for the CLI name:
+export LINGODOTDEV_API_KEY="$LINGO_DOT_DEV_API_KEY"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without the key the preview will fall back to the English message and surface an error banner.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Lingo CLI Workflow
+Static localization lives under `data/`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `ui.en.json` – UI labels
+- `onboarding_template.en.json` – Company, role, and tasks
 
-## Learn More
+Configure additional targets in `i18n.json` and run the CLI after editing the English source:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+export LINGO_DOT_DEV_API_KEY="<your-lingo-api-key>"
+npx lingo.dev@latest run
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This updates `data/ui.{locale}.json` and `data/onboarding_template.{locale}.json` for all target locales. A GitHub Actions workflow (`.github/workflows/i18n.yml`) invokes `npx lingo.dev@latest ci --pull-request` on pushes to `main` that modify the English source or `i18n.json`, ensuring translations stay in sync via automated PRs.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
+```
+app/
+  page.tsx          # HR + employee panels with locale switcher
+  layout.tsx        # Root metadata + fonts
+  globals.css       # Tailwind + design tokens
+data/
+  ui.*.json         # UI strings localized via Lingo CLI
+  onboarding_template.*.json
+lib/
+  i18n.ts           # Typed helpers to load JSON per locale
+  lingo.ts          # Lingo SDK instance + runtime translation helper
+.github/workflows/
+  i18n.yml          # GitHub Action running `lingo.dev ci`
+i18n.json           # Localization bucket configuration
+```
 
-## Deploy on Vercel
+## Useful Scripts
+- `npm run dev` – Next.js dev server
+- `npm run build` – Production build
+- `npm run lint` – ESLint via `eslint-config-next`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Hackathon Notes
+- All styles, data, and code were authored for this LingoHack25 MVP after the event kickoff.
+- Replace placeholder API keys with your own Lingo credentials before running the CLI/SDK in production.
+- Extend `SUPPORTED_LOCALES` inside `lib/i18n.ts` and re-run the CLI to add more languages or content buckets.
