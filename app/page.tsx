@@ -414,6 +414,8 @@ export default function Home() {
   const roleStatus = getStatusForField(selectedLocale, roleFieldKey);
   const statusBadgeClass = (status: TranslationStatus) =>
     `inline-flex items-center rounded-full border border-white/10 px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]} dark:border-slate-700`;
+  const warningBadgeClass =
+    "inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-100";
   const hasTranslationsInFlight = translationCount > 0;
   const readableLocaleName = LOCALE_BADGE_LABELS[selectedLocale] ?? selectedLocale;
 
@@ -544,7 +546,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background bg-cover bg-fixed px-4 py-10 text-foreground transition-colors">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <header className="space-y-4 rounded-[32px] bg-white/80 p-6 text-center shadow-xl ring-1 ring-white/50 backdrop-blur-sm transition dark:bg-slate-900/70 dark:text-slate-100 dark:ring-white/10 md:text-left">
+        <header className="space-y-4 rounded-4xl bg-white/80 p-6 text-center shadow-xl ring-1 ring-white/50 backdrop-blur-sm transition dark:bg-slate-900/70 dark:text-slate-100 dark:ring-white/10 md:text-left">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-wide text-indigo-500 dark:text-indigo-300">
@@ -574,7 +576,7 @@ export default function Home() {
           </header>
 
         <section className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[32px] bg-gradient-to-br from-white/90 to-white/60 p-6 shadow-xl ring-1 ring-slate-200/70 transition backdrop-blur-sm dark:from-slate-900 dark:to-slate-900/70 dark:ring-slate-800/80">
+          <div className="rounded-4xl bg-linear-to-br from-white/90 to-white/60 p-6 shadow-xl ring-1 ring-slate-200/70 transition backdrop-blur-sm dark:from-slate-900 dark:to-slate-900/70 dark:ring-slate-800/80">
             <div className="mb-6 space-y-3">
               <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -695,7 +697,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative rounded-[32px] bg-gradient-to-br from-white/90 to-white/60 p-6 text-slate-900 shadow-xl ring-1 ring-slate-200/60 transition backdrop-blur dark:from-slate-900 dark:to-slate-900/70 dark:text-slate-100 dark:ring-slate-800/70">
+          <div className="relative rounded-4xl bg-linear-to-br from-white/90 to-white/60 p-6 text-slate-900 shadow-xl ring-1 ring-slate-200/60 transition backdrop-blur dark:from-slate-900 dark:to-slate-900/70 dark:text-slate-100 dark:ring-slate-800/70">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -948,8 +950,8 @@ export default function Home() {
                               </p>
                               <div className="flex items-center gap-2">
                                 {comparison.titleNeedsReview && (
-                                  <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-xs font-semibold text-amber-100">
-                                    ⚠ Longer than English
+                                  <span className={warningBadgeClass}>
+                                    ⚠ <span>Longer than English</span>
                                   </span>
                                 )}
                                 <span className={statusBadgeClass(comparison.titleStatus)}>
@@ -1011,8 +1013,8 @@ export default function Home() {
                               </p>
                               <div className="flex items-center gap-2">
                                 {comparison.descriptionNeedsReview && (
-                                  <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-xs font-semibold text-amber-100">
-                                    ⚠ Longer than English
+                                  <span className={warningBadgeClass}>
+                                    ⚠ <span>Longer than English</span>
                                   </span>
                                 )}
                                 <span className={statusBadgeClass(comparison.descriptionStatus)}>
@@ -1131,7 +1133,7 @@ export default function Home() {
               </div>
             )}
             {hasTranslationsInFlight && (
-              <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center rounded-[32px] bg-background/70 backdrop-blur-sm dark:bg-background/60">
+              <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center rounded-4xl bg-background/70 backdrop-blur-sm dark:bg-background/60">
                 <div className="mb-2 h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
                 <p className="text-sm text-muted-foreground">Translating content…</p>
               </div>
