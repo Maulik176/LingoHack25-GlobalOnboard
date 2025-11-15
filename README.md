@@ -10,6 +10,13 @@
 - **Full Lingo toolchain:** Static JSON via CLI, runtime personalization via SDK, and CI automation so translations stay fresh.
 - **Enterprise-ready touches:** Translation QA mode, localization health warnings, onboarding pack export, and translation spinners that prove we’re production aware.
 
+> ### 🏅 Lingo Product Scorecard
+> | Lingo product | How GlobalOnboard uses it | Why it matters |
+> | --- | --- | --- |
+> | **Lingo CLI** | Generates `data/ui.{locale}.json` and `data/onboarding_template.{locale}.json` from English sources via `npx lingo.dev@latest run`. | Demonstrates the official static localization workflow judges expect. |
+> | **Lingo JavaScript SDK** | Translates the welcome note and every custom task at runtime with caching, spinners, and graceful fallbacks. | Shows dynamic personalization for each employee preview. |
+> | **Lingo CI** | `.github/workflows/i18n.yml` runs `npx lingo.dev@latest ci --pull-request` whenever English JSON or `i18n.json` changes. | Proves translation automation and GitHub integration end-to-end. |
+
 ---
 
 ## 🔑 Feature Highlights
