@@ -13,7 +13,7 @@
  ### 🏅 Lingo Product Scorecard
  | Lingo product | How GlobalOnboard uses it | Why it matters |
  | --- | --- | --- |
- | **Lingo CLI** | Generates `data/ui.{locale}.json` and `data/onboarding_template.{locale}.json` from English sources via `npx lingo.dev@latest run`. | Demonstrates the official static localization workflow judges expect. |
+ | **Lingo CLI** | Generates `data/ui.{locale}.json` and `data/onboarding_template.{locale}.json` from English sources via `npx lingo.dev@latest run`. | Demonstrates the official static localization workflow. |
  | **Lingo JavaScript SDK** | Translates the welcome note and every custom task at runtime with caching, spinners, and graceful fallbacks. | Shows dynamic personalization for each employee preview. |
  | **Lingo CI** | `.github/workflows/i18n.yml` runs `npx lingo.dev@latest ci --pull-request` whenever English JSON or `i18n.json` changes. | Proves translation automation and GitHub integration end-to-end. |
 
