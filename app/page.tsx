@@ -100,6 +100,8 @@ type TranslatableFieldId =
   | { type: "taskTitle"; taskId: string }
   | { type: "taskDescription"; taskId: string };
 
+type PrimaryField = "companyName" | "role";
+
 type TranslationOverride = {
   text: string;
   status: TranslationStatus;
@@ -138,9 +140,11 @@ function buildFieldKey(field: TranslatableFieldId) {
 export default function Home() {
   const hrStrings = getUi("en");
   const englishTemplate = getTemplate("en");
+  const defaultCompanyName = englishTemplate.companyName;
+  const defaultRole = englishTemplate.role;
 
-  const [companyName, setCompanyName] = useState(englishTemplate.companyName);
-  const [role, setRole] = useState(englishTemplate.role);
+  const [companyName, setCompanyName] = useState(defaultCompanyName);
+  const [role, setRole] = useState(defaultRole);
   const [tasks, setTasks] = useState<HrTask[]>(
     () =>
       englishTemplate.tasks.map((task) => ({
@@ -171,6 +175,10 @@ export default function Home() {
   const welcomeCache = useRef<Partial<Record<Locale, WelcomeCacheEntry>>>({});
   const [customTranslations, setCustomTranslations] = useState<CustomTranslationCache>({});
   const pendingCustomTranslations = useRef<Set<string>>(new Set());
+  const [fieldTranslations, setFieldTranslations] = useState<
+    Partial<Record<Locale, Partial<Record<PrimaryField, WelcomeCacheEntry>>>>
+  >({});
+  const pendingFieldTranslations = useRef<Set<string>>(new Set());
   const [translationCount, setTranslationCount] = useState(0);
 
   useEffect(() => {
@@ -266,10 +274,33 @@ export default function Home() {
       return acc;
     }, {});
     const localeCustomTranslations = customTranslations[selectedLocale] ?? {};
+    const localeFieldCache = fieldTranslations[selectedLocale] ?? {};
+    const resolveField = (
+      field: PrimaryField,
+      englishValue: string,
+      localizedValue: string,
+    ) => {
+      const trimmedValue = englishValue.trim();
+      if (!trimmedValue) {
+        return "";
+      }
+
+      const defaultValue = field === "companyName" ? defaultCompanyName : defaultRole;
+      if (trimmedValue === defaultValue.trim()) {
+        return localizedValue;
+      }
+
+      const cached = localeFieldCache[field];
+      if (cached?.source === englishValue) {
+        return cached.value;
+      }
+
+      return englishValue;
+    };
 
     return {
-      companyName: localizedTemplate.companyName,
-      role: localizedTemplate.role,
+      companyName: resolveField("companyName", companyName, localizedTemplate.companyName),
+      role: resolveField("role", role, localizedTemplate.role),
       tasks: tasks.map((task) => {
         if (task.source === "template") {
           return (
@@ -289,7 +320,16 @@ export default function Home() {
         };
       }),
     };
-  }, [companyName, customTranslations, role, selectedLocale, tasks]);
+  }, [
+    companyName,
+    customTranslations,
+    defaultCompanyName,
+    defaultRole,
+    fieldTranslations,
+    role,
+    selectedLocale,
+    tasks,
+  ]);
   const effectiveTemplate = useMemo(() => {
     if (selectedLocale === "en") {
       return previewTemplate;
@@ -358,6 +398,56 @@ export default function Home() {
       })();
     });
   }, [customTranslations, selectedLocale, tasks]);
+
+  useEffect(() => {
+    if (selectedLocale === "en") return;
+
+    const locale = selectedLocale;
+    const localeCache = fieldTranslations[locale] ?? {};
+    ( ["companyName", "role"] as PrimaryField[] ).forEach((field) => {
+      const value = field === "companyName" ? companyName : role;
+      const trimmedValue = value.trim();
+      if (!trimmedValue) {
+        return;
+      }
+
+      const defaultValue = field === "companyName" ? defaultCompanyName : defaultRole;
+      if (trimmedValue === defaultValue.trim()) {
+        return;
+      }
+
+      const cached = localeCache[field];
+      if (cached?.source === value) {
+        return;
+      }
+
+      const key = `${locale}-${field}`;
+      if (pendingFieldTranslations.current.has(key)) {
+        return;
+      }
+      pendingFieldTranslations.current.add(key);
+
+      startTranslationJob();
+      translateWelcomeNote(value, locale)
+        .then((result) => {
+          setFieldTranslations((prev) => {
+            const localeEntries = { ...(prev[locale] ?? {}) };
+            localeEntries[field] = {
+              source: value,
+              value: result,
+            };
+            return { ...prev, [locale]: localeEntries };
+          });
+        })
+        .catch((error) => {
+          console.error(`Failed to translate ${field}`, error);
+        })
+        .finally(() => {
+          pendingFieldTranslations.current.delete(key);
+          finishTranslationJob();
+        });
+    });
+  }, [companyName, defaultCompanyName, defaultRole, fieldTranslations, role, selectedLocale]);
 
   const shouldTranslate =
     selectedLocale !== "en" && welcomeNote.trim().length > 0;
