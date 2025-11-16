@@ -688,9 +688,15 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-background bg-cover bg-fixed px-4 py-10 text-foreground transition-colors">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <header className="space-y-4 rounded-4xl bg-white/80 p-6 text-center shadow-xl ring-1 ring-white/50 backdrop-blur-sm transition dark:bg-slate-900/70 dark:text-slate-100 dark:ring-white/10 md:text-left">
+    <main className="relative min-h-screen overflow-hidden bg-[#020617] px-4 py-10 text-foreground transition-colors">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 right-10 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-emerald-500/25 via-cyan-500/20 to-transparent blur-[130px]" />
+        <div className="absolute left-20 top-1/3 h-[360px] w-[360px] rounded-full bg-gradient-to-tr from-indigo-500/25 via-sky-500/20 to-transparent blur-[140px]" />
+        <div className="absolute bottom-0 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-fuchsia-500/20 via-transparent to-transparent blur-[140px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <header className="space-y-5 rounded-[36px] border border-white/10 bg-slate-900/80 p-6 text-center shadow-[0_35px_120px_-30px_rgba(30,64,175,0.7)] ring-1 ring-white/5 backdrop-blur-xl transition md:text-left">
             <div className="flex flex-col items-center gap-4 text-center">
               <div className="space-y-3">
                 <div className="flex justify-center">
@@ -709,21 +715,21 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <ul className="grid gap-3 text-left text-sm text-slate-700 dark:text-slate-200 sm:grid-cols-2">
+            <ul className="grid gap-3 text-left text-sm text-slate-200 sm:grid-cols-2">
               {HERO_HIGHLIGHTS.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-2 rounded-2xl bg-slate-100 p-3 ring-1 ring-slate-100 transition dark:bg-slate-900 dark:ring-slate-800"
+                  className="flex items-start gap-2 rounded-2xl border border-white/5 bg-gradient-to-r from-slate-900/70 to-slate-900/30 p-4 text-white shadow-inner transition"
                 >
-                  <span className="mt-0.5 text-indigo-500 dark:text-indigo-300">✦</span>
+                  <span className="mt-0.5 text-indigo-300">✦</span>
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </header>
 
-        <section className="grid gap-6 lg:grid-cols-2 items-start">
-          <div className="rounded-4xl bg-linear-to-br from-white/90 to-white/60 p-6 shadow-xl ring-1 ring-slate-200/70 transition backdrop-blur-sm dark:from-slate-900 dark:to-slate-900/70 dark:ring-slate-800/80">
+        <section className="grid items-start gap-6 lg:grid-cols-2">
+          <div className="rounded-[30px] border border-white/10 bg-slate-900/80 p-6 shadow-[0_25px_80px_-30px_rgba(15,23,42,0.9)] backdrop-blur-2xl transition">
             <div className="mb-6 space-y-3">
               <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -734,7 +740,7 @@ export default function Home() {
                     Configure the onboarding journey for this role.
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-full bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-200">
+                <span className="inline-flex items-center rounded-full bg-indigo-600/20 px-3 py-1 text-xs font-semibold text-indigo-200">
                   👤 HR / People Ops
                 </span>
               </div>
@@ -844,7 +850,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative rounded-4xl bg-linear-to-br from-white/90 to-white/60 p-6 text-slate-900 shadow-xl ring-1 ring-slate-200/60 transition backdrop-blur dark:from-slate-900 dark:to-slate-900/70 dark:text-slate-100 dark:ring-slate-800/70">
+          <div className="relative rounded-[30px] border border-white/10 bg-slate-900/80 p-6 text-slate-200 shadow-[0_25px_80px_-30px_rgba(15,23,42,0.9)] backdrop-blur-2xl transition">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -855,7 +861,7 @@ export default function Home() {
                     This is what your new hire will see.
                   </p>
                 </div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-100">
                   🧑‍💼 New hire – {readableLocaleName}
                 </span>
               </div>
