@@ -1,6 +1,7 @@
 # GlobalOnboard · LingoHack25 ✨
 
- **One onboarding checklist. Any language.**  
+
+ **One onboarding checklist. Any language. Fully Configurable**  
  HR writes once in English, and GlobalOnboard turns it into a polished, localized employee experience by combining **Lingo CLI**, **Lingo JavaScript SDK**, and **Lingo CI**.
 
 
